@@ -100,7 +100,7 @@ public class SrvThread extends Thread{
 	
 	
 	private boolean opt0(String str_valor_comun, PrintWriter ac, BufferedReader dc) throws Exception {
-		// option 0: signing verification should not check
+		// option 0: signing verification should not 
 		// we generate the error on purpose
 		String linea;
 		String msj = g.toString()+","+p.toString()+","+str_valor_comun;
@@ -243,7 +243,7 @@ public class SrvThread extends Thread{
     		
     		// computing (G^y)^x mod N
     		BigInteger g2y = new BigInteger(linea);
-    		BigInteger llave_maestra = calcular_llave_maestra(g2y,bix,p);
+    		BigInteger llave_maestra = calcular_llave_maestra(g2y,bix,p);	
     		String str_llave = llave_maestra.toString();
     		System.out.println(dlg + " llave maestra: " + str_llave);
     		
@@ -284,7 +284,7 @@ public class SrvThread extends Thread{
 	        	ac.println(m1);
 	        	ac.println(m2);
 	        	ac.println(str_iv2);
-	        	
+	        		
 	        	linea = dc.readLine();
     			if (linea.compareTo("OK")==0) {
     				System.out.println("==========> Test 2c: passed (server sends matching query and MAC).");

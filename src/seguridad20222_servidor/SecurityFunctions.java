@@ -20,7 +20,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityFunctions {
 	private String algoritmo_simetrico = "AES/CBC/PKCS5Padding";
 	private String algoritmo_asimetrico = "RSA";
-
+	
+	// Firma con la llave pública el mensaje enviado
     public byte[] sign(PrivateKey privada, String mensaje) throws Exception {
         Signature privateSignature = Signature.getInstance("SHA256withRSA");
         privateSignature.initSign(privada);
@@ -29,6 +30,7 @@ public class SecurityFunctions {
         return signature;
     }
     
+    // Verifica si la firma fue hecha con la llave correspondiente
     public boolean checkSignature(PublicKey publica, byte[] firma, String mensaje) throws Exception {
         Signature publicSignature = Signature.getInstance("SHA256withRSA");
         publicSignature.initVerify(publica);
@@ -37,6 +39,7 @@ public class SecurityFunctions {
         return isCorrect;
     }
     
+    // Encripta asimétricamente el mensaje con la llave pública
     public byte[] aenc(PublicKey publica, String mensaje) throws Exception {        
         Cipher encryptCipher = Cipher.getInstance(algoritmo_asimetrico);
         encryptCipher.init(Cipher.ENCRYPT_MODE, publica);
@@ -44,6 +47,7 @@ public class SecurityFunctions {
         return cipherText;
     }
     
+    // Desencripta asimétricamente el mensaje con la llave privada
     public String adec(byte[] cifrado, PrivateKey privada) throws Exception {
         Cipher decriptCipher = Cipher.getInstance(algoritmo_asimetrico);
         decriptCipher.init(Cipher.DECRYPT_MODE, privada);
@@ -58,7 +62,8 @@ public class SecurityFunctions {
 		byte[] bytes = mac.doFinal(msg);
 		return bytes;
 	}
-
+	
+	
 	public boolean checkInt(byte[] msg, SecretKey key, byte [] hash ) throws Exception
 	{
 		byte [] nuevo = hmac(msg, key);
@@ -71,6 +76,7 @@ public class SecurityFunctions {
 		return true;
 	}
     
+	// Crea la llave simétrica para encriptar el mensaje/consulta
     public SecretKey csk1(String semilla) throws Exception {
     	byte[] byte_semilla = semilla.trim().getBytes(StandardCharsets.UTF_8);
     	MessageDigest digest = MessageDigest.getInstance("SHA-512");
@@ -84,6 +90,7 @@ public class SecurityFunctions {
 		return sk;
 	}
     
+    // Crea la llave simétrica para encriptar el mensaje mac (digest)
     public SecretKey csk2(String semilla) throws Exception {
     	byte[] byte_semilla = semilla.trim().getBytes(StandardCharsets.UTF_8);
     	MessageDigest digest = MessageDigest.getInstance("SHA-512");
@@ -96,7 +103,8 @@ public class SecurityFunctions {
 		sk = new SecretKeySpec(encoded2,"AES");	
 		return sk;
 	}
-	
+    
+	// Encripta con la llave simétrica que se le pasa por parametro y el vector inicial (iv)
 	public byte[] senc (byte[] msg, SecretKey key, IvParameterSpec iv, String id) throws Exception {
 		Cipher decifrador = Cipher.getInstance(algoritmo_simetrico); 
 		long start = System.nanoTime();
@@ -107,12 +115,14 @@ public class SecurityFunctions {
 		return tmp;
 	}
 	
+	// Descifra con la llave simétrica que se le pasa por parametro y el vector inicial (iv)
 	public byte[] sdec (byte[] msg, SecretKey key, IvParameterSpec iv) throws Exception {
 		Cipher decifrador = Cipher.getInstance(algoritmo_simetrico); 
 		decifrador.init(Cipher.DECRYPT_MODE, key, iv); 
 		return decifrador.doFinal(msg);
 	}
 	
+	// Funcion que lee del archivo de la llave pública y crearla para el servidor.
 	public PublicKey read_kplus(String nombreArchivo, String id) {
 		FileInputStream is1;
 		PublicKey pubkey = null;
@@ -132,6 +142,7 @@ public class SecurityFunctions {
 		return pubkey;
 	}
 	
+	// Funcion que lee del archivo de la llave privada y crearla para el servidor
 	public PrivateKey read_kmin(String nombreArchivo, String id) {
 		PrivateKey privkey = null;
 		System.out.println(id+nombreArchivo);

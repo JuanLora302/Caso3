@@ -58,7 +58,7 @@ public class ServidorMain {
 				d.start();
 			} catch (IOException e) {
 				System.out.println(ID + " delegate " + idThread + ": accepting client - ERROR");
-				e.printStackTrace();
+				e.printStackTrace(); 	 	
 			}
 		}
 
